@@ -1,4 +1,4 @@
-module github.com/kagadar/go_proto_expression
+module github.com/Kagadar/go_proto_expression
 
 go 1.17
 
