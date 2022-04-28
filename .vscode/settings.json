@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "bazel*/": true,
+    "bazel-*/": true,
   },
   "go.toolsManagement.autoUpdate": true,
   "go.goroot": "${workspaceFolder}/bazel-go_proto_expression/external/go_sdk",

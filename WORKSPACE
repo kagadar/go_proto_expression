@@ -4,8 +4,21 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "io_bazel_rules_go",
-    branch = "master",
+    patch_args = ["-p1"],
+    patches = [
+        "//:io_bazel_rules_go.pull.3083.patch",
+    ],
     remote = "https://github.com/bazelbuild/rules_go",
+    tag = "v0.31.0",
+)
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+
+go_rules_dependencies()
+
+go_register_toolchains(
+    nogo = "@//:nogo",
+    version = "1.18.1",
 )
 
 git_repository(
@@ -14,28 +27,17 @@ git_repository(
     remote = "https://github.com/protocolbuffers/protobuf",
 )
 
-git_repository(
-    name = "bazel_gazelle",
-    patch_args = ["-p1"],
-    patches = ["//:1217.patch"],
-    remote = "https://github.com/bazelbuild/bazel-gazelle",
-    tag = "v0.25.0",
-)
-
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-
-go_rules_dependencies()
-
-# TODO(kagadar): Go 1.18 doesn't work properly with gopackagesdriver, update
-# when fixed: https://github.com/bazelbuild/rules_go/issues/3080
-go_register_toolchains(
-    nogo = "@//:nogo",
-    version = "1.17",
-)
-
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
+
+git_repository(
+    name = "bazel_gazelle",
+    patch_args = ["-p1"],
+    patches = ["//:bazel_gazelle.issue.1217.patch"],
+    remote = "https://github.com/bazelbuild/bazel-gazelle",
+    tag = "v0.25.0",
+)
 
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 

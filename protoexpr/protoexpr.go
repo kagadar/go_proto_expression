@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package protoexpression allows for a proto message, and its fields, to be
+// Package protoexpr allows for a proto message, and its fields, to be
 // declared as an Ident for an API filter string (https://google.aip.dev/160).
-package protoexpression
+package protoexpr
 
 import (
 	"fmt"
