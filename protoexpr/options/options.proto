@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package kagadar.protoexpr.options;
+
+import "google/protobuf/descriptor.proto";
+
+message FieldFilteringOptions {
+    optional bool filterable = 1;
+    optional bool searchable = 2;
+    optional bool traversable = 3;
+}
+
+message MessageCollectionOptions {
+    optional int32 collection_field_number = 1;
+}
+
+message MethodPaginationOptions {
+    optional int32 default_page_size = 1;
+    optional int32 max_page_size = 2;
+}
+
+extend google.protobuf.FieldOptions {
+    FieldFilteringOptions filtering = 20220413;
+}
+
+extend google.protobuf.MessageOptions {
+    MessageCollectionOptions collection = 20220413;
+}
+
+extend google.protobuf.MethodOptions {
+    MethodPaginationOptions pagination = 20220413;
+}
