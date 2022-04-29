@@ -14,6 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PROTOC="protoc --experimental_allow_proto3_optional --go_out=genproto -I./"
+PROTOC="protoc --experimental_allow_proto3_optional --go_out=./ -I./ --go_opt=module=github.com/kagadar/go_proto_expression"
 
-$PROTOC protoexpr/options/options.proto
+$PROTOC proto/options/options.proto

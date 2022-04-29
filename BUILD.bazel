@@ -10,6 +10,7 @@ exports_files(["LICENSE"])
 
 # gazelle:prefix github.com/kagadar/go_proto_expression
 # gazelle:exclude genproto/
+# gazelle:exclude proto/
 gazelle(name = "gazelle")
 
 nogo(

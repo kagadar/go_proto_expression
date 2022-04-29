@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+go_proto_library(
+    name = "kagadar_protoexpr_options_go_proto",
+    importpath = "github.com/kagadar/go_proto_expression/genproto/options",
+    proto = "//proto/options:kagadar_protoexpr_options_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "options",
+    embed = [":kagadar_protoexpr_options_go_proto"],
+    importpath = "github.com/kagadar/go_proto_expression/genproto/options",
+    visibility = ["//visibility:public"],
+)
