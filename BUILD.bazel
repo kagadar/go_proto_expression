@@ -1,4 +1,5 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@io_bazel_rules_go//go:def.bzl", "nogo")
 
 package(default_visibility = ["//visibility:public"])
@@ -14,4 +15,10 @@ gazelle(name = "gazelle")
 nogo(
     name = "nogo",
     vet = True,
+)
+
+bzl_library(
+    name = "deps",
+    srcs = ["deps.bzl"],
+    visibility = ["//visibility:public"],
 )
