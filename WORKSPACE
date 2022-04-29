@@ -1,15 +1,18 @@
 workspace(name = "go_proto_expression")
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-git_repository(
+http_archive(
     name = "io_bazel_rules_go",
     patch_args = ["-p1"],
     patches = [
         "//:io_bazel_rules_go.pull.3083.patch",
     ],
-    remote = "https://github.com/bazelbuild/rules_go",
-    tag = "v0.31.0",
+    sha256 = "f2dcd210c7095febe54b804bb1cd3a58fe8435a909db2ec04e31542631cf715c",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.31.0/rules_go-v0.31.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.31.0/rules_go-v0.31.0.zip",
+    ],
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -21,45 +24,36 @@ go_register_toolchains(
     version = "1.18.1",
 )
 
-git_repository(
+http_archive(
     name = "com_google_protobuf",
-    branch = "main",
-    remote = "https://github.com/protocolbuffers/protobuf",
+    sha256 = "8b28fdd45bab62d15db232ec404248901842e5340299a57765e48abe8a80d930",
+    strip_prefix = "protobuf-3.20.1",
+    urls = [
+        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.20.1.tar.gz",
+        "https://github.com/protocolbuffers/protobuf/archive/v3.20.1.tar.gz",
+    ],
 )
 
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
-git_repository(
+http_archive(
     name = "bazel_gazelle",
     patch_args = ["-p1"],
     patches = ["//:bazel_gazelle.issue.1217.patch"],
-    remote = "https://github.com/bazelbuild/bazel-gazelle",
-    tag = "v0.25.0",
+    sha256 = "5982e5463f171da99e3bdaeff8c0f48283a7a5f396ec5282910b9e8a49c0dd7e",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
+    ],
 )
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+load("//:deps.bzl", "go_dependencies")
 
-go_repository(
-    name = "com_github_iancoleman_strcase",
-    importpath = "github.com/iancoleman/strcase",
-    sum = "h1:05I4QRnGpI0m37iZQRuskXh+w77mr6Z41lwQzuHLwW0=",
-    version = "v0.2.0",
-)
+# gazelle:repository_macro deps.bzl%go_dependencies
+go_dependencies()
 
-go_repository(
-    name = "org_golang_google_protobuf",
-    importpath = "google.golang.org/protobuf",
-    sum = "h1:w43yiav+6bVFTBQFZX0r7ipe9JQ1QsbMgHwbBziscLw=",
-    version = "v1.28.0",
-)
-
-go_repository(
-    name = "tech_einride_go_aip",
-    importpath = "go.einride.tech/aip",
-    sum = "h1:srys7sFWPixEqyOu0gWuZAC86p4UAnWJIQcA01Ys3R4=",
-    version = "v0.54.1",
-)
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
