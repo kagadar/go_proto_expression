@@ -17,6 +17,8 @@ package kagadar.protoexpr.options;
 
 import "google/protobuf/descriptor.proto";
 
+option go_package = "github.com/kagadar/go_proto_expression/protoexpr/options";
+
 message FieldFilteringOptions {
   optional bool filterable = 1;
   optional bool searchable = 2;
