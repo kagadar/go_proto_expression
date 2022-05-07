@@ -8,9 +8,10 @@ licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])
 
-# gazelle:prefix github.com/kagadar/go_proto_expression
 # gazelle:exclude genproto/
 # gazelle:exclude proto/
+# gazelle:go_naming_convention import
+# gazelle:prefix github.com/kagadar/go_proto_expression
 gazelle(name = "gazelle")
 
 nogo(
