@@ -12,6 +12,9 @@ exports_files(["LICENSE"])
 # gazelle:exclude proto/
 # gazelle:go_naming_convention import
 # gazelle:prefix github.com/kagadar/go_proto_expression
+# gazelle:resolve proto proto/options/options.proto //proto/options:kagadar_protoexpr_options_proto
+# gazelle:resolve proto go proto/options/options.proto //genproto/options
+# gazelle:resolve go github.com/kagadar/go_proto_expression/genproto/options //genproto/options
 gazelle(name = "gazelle")
 
 nogo(

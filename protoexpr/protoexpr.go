@@ -21,12 +21,15 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"go.einride.tech/aip/filtering"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/dynamicpb"
 
 	expr "google.golang.org/genproto/googleapis/api/expr/v1alpha1"
 	dpb "google.golang.org/protobuf/types/known/durationpb"
 	tspb "google.golang.org/protobuf/types/known/timestamppb"
+
+	opb "github.com/kagadar/go_proto_expression/genproto/options"
 )
 
 var (
@@ -77,6 +80,13 @@ func traverseFields(path string, msg protoreflect.MessageDescriptor, msgExpr *ex
 	}
 	for i := 0; i < msg.Fields().Len(); i++ {
 		field := msg.Fields().Get(i)
+		if proto.HasExtension(field.Options(), opb.E_Filtering) {
+			opts := proto.GetExtension(field.Options(), opb.E_Filtering).(*opb.FieldFilteringOptions)
+			// Default value is true; check if set before testing if false.
+			if opts.Filterable != nil && !*opts.Filterable {
+				continue
+			}
+		}
 		var fType *expr.Type
 		switch {
 		case field.IsMap():

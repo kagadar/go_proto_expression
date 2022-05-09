@@ -20,17 +20,24 @@ import "google/protobuf/descriptor.proto";
 option go_package = "github.com/kagadar/go_proto_expression/genproto/options";
 
 message FieldFilteringOptions {
+  // This field implements all standard filtering operations.
+  // Defaults to true.
   optional bool filterable = 1;
+  // This field participates in fuzzy search.
+  // Only applicable to primitive types.
+  // Defaults to false.
   optional bool searchable = 2;
-  optional bool traversable = 3;
 }
 
 message MessageCollectionOptions {
+  // Specifies the field number of the collection that is wrapped by a ListResponse that is not the first field.
   optional int32 collection_field_number = 1;
 }
 
 message MethodPaginationOptions {
+  // When the page size is unspecified in a request, how many results should be returned.
   optional int32 default_page_size = 1;
+  // What is the maximum page size.
   optional int32 max_page_size = 2;
 }
 
