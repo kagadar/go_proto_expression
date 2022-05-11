@@ -19,6 +19,28 @@ import "proto/options/options.proto";
 
 option go_package = "github.com/kagadar/go_proto_expression/protoexpr/test";
 
+service TestService {
+    rpc ListTest(ListTestRequest) returns (ListTestResponse){
+        option (pagination) = {
+            default_page_size: 1000
+            max_page_size: 10000
+        };
+    };
+}
+
+message ListTestRequest {
+    string parent = 1;
+    int32 page_size = 2;
+    string page_token = 3;
+    string filter = 4;
+}
+
+message ListTestResponse {
+    option (collection) = {collection_field_number: 2};
+    repeated TestFiltering tests = 2;
+    string next_page_token = 1;
+}
+
 message TestFiltering {
     message SubMessage {
         int64 filterable_primitive = 1 [(filtering) = {filterable: true}];
