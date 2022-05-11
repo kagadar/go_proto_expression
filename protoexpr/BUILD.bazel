@@ -13,6 +13,7 @@ proto_library(
 go_proto_library(
     name = "test_go_proto",
     testonly = True,
+    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
     importpath = "github.com/kagadar/go_proto_expression/protoexpr/test",
     proto = ":test_proto",
     visibility = ["//visibility:public"],
@@ -21,13 +22,19 @@ go_proto_library(
 
 go_library(
     name = "protoexpr",
-    srcs = ["protoexpr.go"],
+    srcs = [
+        "protoexpr.go",
+        "transpiler.go",
+    ],
     importpath = "github.com/kagadar/go_proto_expression/protoexpr",
     visibility = ["//visibility:public"],
     deps = [
         "//genproto/options",
         "@com_github_iancoleman_strcase//:strcase",
         "@go_googleapis//google/api/expr/v1alpha1:expr_go_proto",
+        "@org_golang_google_grpc//codes:go_default_library",
+        "@org_golang_google_grpc//status:go_default_library",
+        "@org_golang_google_protobuf//encoding/protowire",
         "@org_golang_google_protobuf//proto",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//types/dynamicpb",
@@ -41,5 +48,9 @@ go_test(
     name = "protoexpr_test",
     srcs = ["protoexpr_test.go"],
     embed = [":protoexpr"],
-    deps = [":test_go_proto"],
+    deps = [
+        ":test_go_proto",
+        "@org_golang_google_protobuf//proto",
+        "@tech_einride_go_aip//filtering",
+    ],
 )

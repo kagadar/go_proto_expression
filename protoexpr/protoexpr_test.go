@@ -15,9 +15,11 @@
 package protoexpr
 
 import (
+	"context"
 	"testing"
 
 	"go.einride.tech/aip/filtering"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/kagadar/go_proto_expression/protoexpr/test"
 )
@@ -33,7 +35,7 @@ func (r req) GetFilter() string {
 func TestDeclare(t *testing.T) {
 	decls, err := filtering.NewDeclarations(append(append([]filtering.DeclarationOption{}, filtering.DeclareStandardFunctions()), Declare((&test.TestFiltering{}).ProtoReflect().Descriptor())...)...)
 	if err != nil {
-		t.Fatalf(`Declare() err = %v, want <nil>`, err)
+		t.Fatalf("Declare() err = %v, want <nil>", err)
 	}
 	if _, err := filtering.ParseFilter(req{
 		`
@@ -47,15 +49,31 @@ func TestDeclare(t *testing.T) {
 			test_filtering.default_enum = VALUE_1
 		`,
 	}, decls); err != nil {
-		t.Fatalf(`filtering.ParseFilter(filterable) err = %v, want <nil>`, err)
+		t.Fatalf("filtering.ParseFilter(filterable) err = %v, want <nil>", err)
 	}
 	if _, err := filtering.ParseFilter(req{`test_filtering.filterable_submessage.unfilterable_primitive = "test"`}, decls); err == nil {
-		t.Fatal(`filtering.ParseFilter(unfilterable message field) err = <nil>, want error`)
+		t.Fatal("filtering.ParseFilter(unfilterable message field) err = <nil>, want error")
 	}
 	if _, err := filtering.ParseFilter(req{`test_filtering.unfilterable_submessage.filterable_primitive = 1`}, decls); err == nil {
-		t.Fatal(`filtering.ParseFilter(unfilterable message) err = <nil>, want error`)
+		t.Fatal("filtering.ParseFilter(unfilterable message) err = <nil>, want error")
 	}
 	if _, err := filtering.ParseFilter(req{`test_filtering.unfilterable_primitive = 1`}, decls); err == nil {
-		t.Fatal(`filtering.ParseFilter(unfilterable field) err = <nil>, want error`)
+		t.Fatal("filtering.ParseFilter(unfilterable field) err = <nil>, want error")
+	}
+}
+
+type transpilerClient[T proto.Message] struct{}
+
+func (transpilerClient[T]) Transpile(ctx context.Context, generator func() T, parent, collection, pageToken string, pageSize int32, filter filtering.Filter) (children []T, nextPageToken string, err error) {
+	return
+}
+
+func TestTranspiler(t *testing.T) {
+	transpiler, err := New[*test.TestFiltering](transpilerClient[*test.TestFiltering]{}, test.File_protoexpr_protoexpr_test_proto.Services().ByName("TestService").Methods().ByName("ListTest"), &test.TestFiltering{})
+	if err != nil {
+		t.Fatalf("New() err = %v, want <nil>", err)
+	}
+	if _, _, err := transpiler.Transpile(context.Background(), &test.ListTestRequest{}); err != nil {
+		t.Fatalf("transpiler.Transpile() err = %v, want <nil>", err)
 	}
 }
