@@ -27,7 +27,7 @@ import (
 	opb "github.com/kagadar/go_proto_expression/genproto/options"
 )
 
-// AIP-132 & AIP-160 compliant List Request.
+// ListRequest is an AIP-132 & AIP-160 compliant List Request.
 type ListRequest interface {
 	proto.Message
 	GetParent() string
@@ -41,6 +41,7 @@ type Client[T proto.Message] interface {
 	Transpile(ctx context.Context, factory func() T, parent, collection, pageToken string, pageSize int32, filter filtering.Filter) (children []T, nextPageToken string, err error)
 }
 
+// Transpiler is the service facing interface that should be used to filter an incoming request.
 type Transpiler[T proto.Message] interface {
 	Transpile(context.Context, ListRequest) (children []T, nextPageToken string, err error)
 }
@@ -71,7 +72,7 @@ func (t transpiler[T]) Transpile(ctx context.Context, req ListRequest) ([]T, str
 	return t.client.Transpile(ctx, func() T { return proto.Clone(t.emptyMessage).(T) }, req.GetParent(), t.collection, req.GetPageToken(), pageSize, filter)
 }
 
-// Creates a new transpiler for requests to the specified List method.
+// New creates a new transpiler for requests to the specified List method.
 // This should be used by the concrete Transpiler implementation.
 func New[T proto.Message](client Client[T], mtd protoreflect.MethodDescriptor, msg T) (Transpiler[T], error) {
 	// Check fields on request and response.

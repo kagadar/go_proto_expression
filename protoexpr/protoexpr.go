@@ -115,8 +115,8 @@ func traverseFields(path string, msg protoreflect.MessageDescriptor, msgExpr *ex
 	return options
 }
 
-// Iterate through all fields of a supplied protobuf Message to create Ident
-// Declarations.
+// Declare iterates through all fields of a supplied protobuf Message to create
+// Ident Declarations.
 // This will produce Ident Declarations for the protobuf Message itself, as well
 // as an overload for the `Has` function to check for field presence.
 //
