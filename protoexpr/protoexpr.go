@@ -96,7 +96,7 @@ func traverseFields(path string, msg protoreflect.MessageDescriptor, msgExpr *ex
 				}
 			}
 		case field.IsList():
-			if t := fieldType(field); fType != nil {
+			if t := fieldType(field); t != nil {
 				fType = filtering.TypeList(t)
 			}
 		default:
@@ -123,7 +123,7 @@ func traverseFields(path string, msg protoreflect.MessageDescriptor, msgExpr *ex
 // Each field will have an Ident produced with an appropriate expr.Type.
 // All enums declared within the message will have their values declared as
 // constants.
-// All fiels of message type will processed recursively, with their Indent name
+// All fields of message type will processed recursively, with their Indent name
 // set to the relative path from the root message.
 // google.protobuf.Timestamp and google.protobuf.Duration are well known types,
 // and will return an appropriate WellKnown type rather than a Message type.

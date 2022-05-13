@@ -46,7 +46,10 @@ go_library(
 
 go_test(
     name = "protoexpr_test",
-    srcs = ["protoexpr_test.go"],
+    srcs = [
+        "protoexpr_test.go",
+        "transpiler_test.go",
+    ],
     embed = [":protoexpr"],
     deps = [
         ":test_go_proto",

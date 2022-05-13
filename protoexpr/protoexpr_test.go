@@ -15,11 +15,9 @@
 package protoexpr
 
 import (
-	"context"
 	"testing"
 
 	"go.einride.tech/aip/filtering"
-	"google.golang.org/protobuf/proto"
 
 	"github.com/kagadar/go_proto_expression/protoexpr/test"
 )
@@ -51,6 +49,15 @@ func TestDeclare(t *testing.T) {
 	}, decls); err != nil {
 		t.Fatalf("filtering.ParseFilter(filterable) err = %v, want <nil>", err)
 	}
+	/* TODO(kagadar): Repeated and map fields are not currently AIP 160 compliant.
+		 The following filters _should_ work, but don't:
+	 		test_filtering.default_enum = VALUE_1 AND
+			test_filtering.repeated_default_primitive:42 AND
+			test_filtering.repeated_default_submessage.filterable_primitive:42 AND
+			test_filtering.map_default_primitive_primitive:test AND
+			test_filtering.map_default_primitive_primitive.test:* AND
+			test_filtering.map_default_primitive_primitive.test:42
+	*/
 	if _, err := filtering.ParseFilter(req{`test_filtering.filterable_submessage.unfilterable_primitive = "test"`}, decls); err == nil {
 		t.Fatal("filtering.ParseFilter(unfilterable message field) err = <nil>, want error")
 	}
@@ -59,21 +66,5 @@ func TestDeclare(t *testing.T) {
 	}
 	if _, err := filtering.ParseFilter(req{`test_filtering.unfilterable_primitive = 1`}, decls); err == nil {
 		t.Fatal("filtering.ParseFilter(unfilterable field) err = <nil>, want error")
-	}
-}
-
-type transpilerClient[T proto.Message] struct{}
-
-func (transpilerClient[T]) Transpile(ctx context.Context, generator func() T, parent, collection, pageToken string, pageSize int32, filter filtering.Filter) (children []T, nextPageToken string, err error) {
-	return
-}
-
-func TestTranspiler(t *testing.T) {
-	transpiler, err := New[*test.TestFiltering](transpilerClient[*test.TestFiltering]{}, test.File_protoexpr_protoexpr_test_proto.Services().ByName("TestService").Methods().ByName("ListTest"), &test.TestFiltering{})
-	if err != nil {
-		t.Fatalf("New() err = %v, want <nil>", err)
-	}
-	if _, _, err := transpiler.Transpile(context.Background(), &test.ListTestRequest{}); err != nil {
-		t.Fatalf("transpiler.Transpile() err = %v, want <nil>", err)
 	}
 }
