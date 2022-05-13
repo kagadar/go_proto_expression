@@ -58,4 +58,7 @@ message TestFiltering {
     float default_float = 6;
     bool default_bool = 7;
     TestEnum default_enum = 8;
+    repeated int64 repeated_default_primitive = 9;
+    repeated SubMessage repeated_default_submessage = 10;
+    map<string, int64> map_default_primitive_primitive = 11;
 }
