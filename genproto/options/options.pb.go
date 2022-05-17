@@ -44,6 +44,7 @@ type FieldFilteringOptions struct {
 	// Defaults to true.
 	Filterable *bool `protobuf:"varint,1,opt,name=filterable,proto3,oneof" json:"filterable,omitempty"`
 	// This field participates in fuzzy search.
+	// Only applicable to primitive types.
 	// Defaults to false.
 	Searchable *bool `protobuf:"varint,2,opt,name=searchable,proto3,oneof" json:"searchable,omitempty"`
 }
