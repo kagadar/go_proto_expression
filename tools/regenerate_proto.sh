@@ -17,3 +17,4 @@
 PROTOC="protoc --experimental_allow_proto3_optional --go_out=./ -I./ --go_opt=module=github.com/kagadar/go_proto_expression"
 
 $PROTOC proto/options/options.proto
+$PROTOC protoexpr/protoexpr_test.proto
