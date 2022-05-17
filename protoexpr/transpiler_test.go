@@ -18,15 +18,16 @@ import (
 	"context"
 	"testing"
 
-	"go.einride.tech/aip/filtering"
 	"google.golang.org/protobuf/proto"
+
+	expr "google.golang.org/genproto/googleapis/api/expr/v1alpha1"
 
 	"github.com/kagadar/go_proto_expression/protoexpr/test"
 )
 
 type transpilerClient[T proto.Message] struct{}
 
-func (transpilerClient[T]) Transpile(ctx context.Context, generator func() T, parent, collection, pageToken string, pageSize int32, filter filtering.Filter) (children []T, nextPageToken string, err error) {
+func (transpilerClient[T]) Transpile(ctx context.Context, generator func() T, parent, collection, pageToken string, pageSize int32, filter *expr.CheckedExpr) (children []T, nextPageToken string, err error) {
 	return
 }
 

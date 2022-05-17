@@ -24,6 +24,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
+	expr "google.golang.org/genproto/googleapis/api/expr/v1alpha1"
+
 	opb "github.com/kagadar/go_proto_expression/genproto/options"
 )
 
@@ -38,7 +40,7 @@ type ListRequest interface {
 
 // Client provides a concrete implementation of the Transpiler for a specific storage client.
 type Client[T proto.Message] interface {
-	Transpile(ctx context.Context, factory func() T, parent, collection, pageToken string, pageSize int32, filter filtering.Filter) (children []T, nextPageToken string, err error)
+	Transpile(ctx context.Context, factory func() T, parent, collection, pageToken string, pageSize int32, filter *expr.CheckedExpr) (children []T, nextPageToken string, err error)
 }
 
 // Transpiler is the service facing interface that should be used to filter an incoming request.
@@ -69,7 +71,7 @@ func (t transpiler[T]) Transpile(ctx context.Context, req ListRequest) ([]T, str
 	if err != nil {
 		return nil, "", err
 	}
-	return t.client.Transpile(ctx, func() T { return proto.Clone(t.emptyMessage).(T) }, req.GetParent(), t.collection, req.GetPageToken(), pageSize, filter)
+	return t.client.Transpile(ctx, func() T { return proto.Clone(t.emptyMessage).(T) }, req.GetParent(), t.collection, req.GetPageToken(), pageSize, filter.CheckedExpr)
 }
 
 // New creates a new transpiler for requests to the specified List method.
